@@ -7,12 +7,12 @@ import { HttpContext } from '@adonisjs/core/http'
 export default class AuthController {
   constructor(protected authService: AuthService) {}
 
-  renderSignUpPage({ view }: HttpContext) {
-    return view.render('pages/auth/signup')
+  renderSignUpPage({ inertia }: HttpContext) {
+    return inertia.render('auth/signup/index')
   }
 
-  renderLoginPage({ view }: HttpContext) {
-    return view.render('pages/auth/login')
+  renderLoginPage({ inertia }: HttpContext) {
+    return inertia.render('auth/login/index')
   }
 
   async signup({ request, session, response }: HttpContext) {
