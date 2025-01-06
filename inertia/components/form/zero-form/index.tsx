@@ -15,7 +15,7 @@ export const ZeroForm = (props: Props) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-12">
+        <div className="grid grid-cols-12 gap-4">
           {formFields.map((field) => (
             <ZeroFormField control={form.control} key={field.name} {...field} />
           ))}
