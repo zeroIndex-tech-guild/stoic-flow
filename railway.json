@@ -12,7 +12,7 @@
     }
   },
   "deploy": {
-    "startCommand": "cd build && npm ci --omit='development' && node bin/server.js",
+    "startCommand": "cd build && npm ci --omit='dev' && node bin/server.js",
     "region": "us-west2",
     "runtime": "V2",
     "numReplicas": 1,
