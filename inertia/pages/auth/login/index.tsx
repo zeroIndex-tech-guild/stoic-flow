@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { ZeroFormField } from '~/components/form/zero-form-field'
 import { ZeroForm } from '~/components/form/zero-form'
 import { Button } from '~/components/ui/button'
+import { toast } from 'sonner'
+import { useLogin } from '~/hooks/auth/useLogin'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'Please add a valid email address.' }),
@@ -40,9 +42,22 @@ export default function LoginPage() {
     defaultValues: defaultLoginFormValues,
     resolver: loginFormResolver,
   })
+  const { login } = useLogin()
 
-  const onSubmit = (data: any) => {
-    console.log('Form submitted', data)
+  const onSubmit = async (formData: LoginFormData) => {
+    const { email, password } = formData
+    const { error } = await login(email, password)
+
+    if (error !== null) {
+      if (error.code === 'auth/invalid-credential') {
+        toast.error('Invalid credentials. Please check your email and password and try again.')
+      }
+
+      return
+    }
+
+    toast.success('User logged in successfully.')
+    router.get('/')
   }
 
   return (

@@ -5,8 +5,11 @@ import react from '@vitejs/plugin-react'
 import adonisjs from '@adonisjs/vite/client'
 
 export default defineConfig({
+  define: {
+    'node:util': {}, // Mock the module
+  },
   plugins: [
-    inertia({ ssr: { enabled: true, entrypoint: 'inertia/app/ssr.tsx' } }),
+    inertia({ ssr: { enabled: false } }),
     react(),
     adonisjs({ entrypoints: ['inertia/app/app.tsx'], reload: ['resources/views/**/*.edge'] }),
   ],

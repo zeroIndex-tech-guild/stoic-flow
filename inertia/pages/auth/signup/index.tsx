@@ -1,19 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { ZeroFormField } from '~/components/form/zero-form-field'
 import { ZeroForm } from '~/components/form/zero-form'
 import { Button } from '~/components/ui/button'
+import { useSignup } from '~/hooks/auth/useSignup'
+import { toast } from 'sonner'
 
 const signupFormSchema = z
   .object({
     name: z.string().min(1, { message: 'Name is required.' }),
     email: z.string().email({ message: 'Please enter a valid email address.' }),
     password: z.string().min(6, { message: 'Password must be at least 6 characters long.' }),
-    confirmPassword: z.string().min(6, { message: 'Please confirm your password.' }),
+    password_confirmation: z.string().min(6, { message: 'Please confirm your password.' }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.password_confirmation, {
     message: 'Passwords do not match.',
     path: ['confirmPassword'],
   })
@@ -26,7 +28,7 @@ const defaultSignupFormValues: SignupFormData = {
   name: '',
   email: '',
   password: '',
-  confirmPassword: '',
+  password_confirmation: '',
 }
 
 const signupFormFields: ZeroFormField[] = [
@@ -49,7 +51,7 @@ const signupFormFields: ZeroFormField[] = [
     type: 'password',
   },
   {
-    name: 'confirmPassword',
+    name: 'password_confirmation',
     label: 'Confirm Password',
     placeholder: 'Re-enter your password',
     type: 'password',
@@ -62,8 +64,21 @@ export default function SignupPage() {
     resolver: signupFormResolver,
   })
 
-  const onSubmit = (data: any) => {
-    console.log('Form submitted', data)
+  const { isSigningUp, signUp } = useSignup()
+
+  const onSubmit = (data: SignupFormData) => {
+    signUp(data, {
+      onError: (errors) => {
+        errors.errors.forEach((error) => {
+          toast.error(error.message)
+        })
+      },
+      onSuccess: (data) => {
+        console.log(data, 'data is here')
+        toast.success(data.message)
+        router.get('/login')
+      },
+    })
   }
 
   return (
@@ -71,7 +86,7 @@ export default function SignupPage() {
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold text-center mb-6">Sign Up</h1>
         <ZeroForm formFields={signupFormFields} form={signupForm} onSubmit={onSubmit}>
-          <Button type="submit" className="w-full my-4">
+          <Button type="submit" className="w-full my-4" disabled={isSigningUp}>
             Sign Up
           </Button>
         </ZeroForm>

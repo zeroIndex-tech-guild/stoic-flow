@@ -20,3 +20,11 @@ router
     router.get('/signup', [loginController, 'renderSignUpPage']).as('signup')
   })
   .as('views')
+
+// API ROUTES
+router
+  .group(() => {
+    router.post('/auth/signup', [loginController, 'signup']).as('signup')
+  })
+  .prefix('/api/v1')
+  .as('api')

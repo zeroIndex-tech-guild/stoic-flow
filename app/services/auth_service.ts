@@ -20,7 +20,7 @@ export default class AuthService {
     } catch (e) {
       return {
         data: null,
-        error: e as Error,
+        error: e as { code: string; message: string },
       }
     }
   }

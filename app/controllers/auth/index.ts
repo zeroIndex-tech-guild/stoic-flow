@@ -1,7 +1,7 @@
 import AuthService from '#services/auth_service'
 import { createUserValidador } from '#validators/create_user'
 import { inject } from '@adonisjs/core'
-import { HttpContext } from '@adonisjs/core/http'
+import { HttpContext, ResponseStatus } from '@adonisjs/core/http'
 
 @inject()
 export default class AuthController {
@@ -15,23 +15,27 @@ export default class AuthController {
     return inertia.render('auth/login/index')
   }
 
-  async signup({ request, session, response }: HttpContext) {
+  async signup({ request, response }: HttpContext) {
     const validatedData = await request.validateUsing(createUserValidador)
 
-    const { error } = await this.authService.createUser(validatedData)
+    const { error, data } = await this.authService.createUser(validatedData)
 
     if (error !== null) {
-      session.flash('message', {
+      return response.status(ResponseStatus.BadRequest).json({
+        status: ResponseStatus.BadRequest,
+        errors: [error],
+        data: null,
         message: 'Error while creating user',
-        type: 'error',
       })
-      return response.redirect().back()
     }
 
-    session.flash('message', {
+    return response.status(ResponseStatus.Created).json({
+      status: ResponseStatus.Created,
+      errors: null,
+      data: {
+        user: data,
+      },
       message: 'User created successfully',
-      type: 'success',
     })
-    return response.redirect('/login')
   }
 }
