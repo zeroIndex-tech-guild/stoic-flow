@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react'
 import PersonalNote from './personal-note'
 import { DailyStoicEntry } from '#shared/types/daily_stoic'
+import { useGetCurrentUser } from '~/hooks/auth/useGetCurrentUser'
 
 type Props = {
   data: DailyStoicEntry
@@ -9,6 +10,9 @@ type Props = {
 
 export const StoicContent = (props: Props) => {
   const { data } = props
+
+  const user = useGetCurrentUser()
+
   return (
     <div className="space-y-8 col-span-12 md:col-span-6">
       {/* Today's Day Count */}
@@ -37,7 +41,7 @@ export const StoicContent = (props: Props) => {
       </div>
 
       {/* Personal Note Section */}
-      <PersonalNote />
+      {user && <PersonalNote />}
 
       {/* Navigation to Previous Days */}
       <div className="flex justify-between items-center mt-8">

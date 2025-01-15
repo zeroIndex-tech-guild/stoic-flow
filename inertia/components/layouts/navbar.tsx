@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Link } from '@inertiajs/react'
+import { useGetCurrentUser } from '~/hooks/auth/useGetCurrentUser'
 
 export const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const user = useGetCurrentUser()
+  const [isLoggedIn, setIsLoggedIn] = useState(!!user)
 
   const handleLogin = () => {
     setIsLoggedIn(true)
@@ -36,15 +38,12 @@ export const Navbar = () => {
         <div>
           {!isLoggedIn ? (
             <div className="space-x-4">
-              <button
-                onClick={handleLogin}
-                className="bg-green-500 px-4 py-2 rounded hover:bg-green-600"
-              >
+              <Link href="/login" className="bg-green-500 px-4 py-2 rounded hover:bg-green-600">
                 Login
-              </button>
-              <button className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600">
+              </Link>
+              <Link href="/signup" className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600">
                 Signup
-              </button>
+              </Link>
             </div>
           ) : (
             <button
