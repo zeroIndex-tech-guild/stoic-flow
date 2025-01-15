@@ -5,9 +5,6 @@ import react from '@vitejs/plugin-react'
 import adonisjs from '@adonisjs/vite/client'
 
 export default defineConfig({
-  define: {
-    'node:util': {}, // Mock the module
-  },
   plugins: [
     inertia({ ssr: { enabled: false } }),
     react(),
