@@ -12,6 +12,7 @@ export default class AuthService {
       const user = await auth.createUser({
         email: data.email,
         password: data.password,
+        displayName: data.name,
       })
       return {
         data: user,

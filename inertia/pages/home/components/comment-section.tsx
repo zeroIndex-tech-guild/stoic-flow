@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useGetCurrentUser } from '~/hooks/auth/useGetCurrentUser'
 
 type Comment = {
   id: number
@@ -9,7 +10,9 @@ type Comment = {
 export const CommentSection = () => {
   const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState<string>('')
+  const user = useGetCurrentUser()
 
+  console.log({ user })
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(e.target.value)
   }
@@ -21,9 +24,11 @@ export const CommentSection = () => {
       const newCommentObj = {
         id: comments.length + 1,
         text: newComment,
-        author: 'Anonymous', // You can replace this with an actual logged-in user's name
+        author: user?.displayName || 'Anonymous',
+        authorId: user?.uid || '',
       }
 
+      console.log(newCommentObj)
       setComments([...comments, newCommentObj])
       setNewComment('')
     }

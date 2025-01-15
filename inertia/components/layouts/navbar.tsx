@@ -1,17 +1,13 @@
-import { useState } from 'react'
-import { Link } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 import { useGetCurrentUser } from '~/hooks/auth/useGetCurrentUser'
+import { firebaseAuth } from '~/lib/firebase'
 
 export const Navbar = () => {
   const user = useGetCurrentUser()
-  const [isLoggedIn, setIsLoggedIn] = useState(!!user)
-
-  const handleLogin = () => {
-    setIsLoggedIn(true)
-  }
 
   const handleLogout = () => {
-    setIsLoggedIn(false)
+    firebaseAuth.signOut()
+    router.get('/login')
   }
 
   return (
@@ -36,7 +32,7 @@ export const Navbar = () => {
           </li>
         </ul>
         <div>
-          {!isLoggedIn ? (
+          {!user ? (
             <div className="space-x-4">
               <Link href="/login" className="bg-green-500 px-4 py-2 rounded hover:bg-green-600">
                 Login

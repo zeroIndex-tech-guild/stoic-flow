@@ -3,8 +3,6 @@ import { CommentSection } from './components/comment-section'
 import { StoicContent } from './components/stoic-content'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import type DailyStoicController from '../../../app/controllers/dayily_stoic_controllers/index'
-import { firebaseAuth } from '~/lib/firebase'
-import { useGetCurrentUser } from '~/hooks/auth/useGetCurrentUser'
 
 type Props = InferPageProps<DailyStoicController, 'renderDailyStoicPage'>
 
