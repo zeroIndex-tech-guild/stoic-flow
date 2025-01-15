@@ -1,3 +1,4 @@
+import { getCurrentDayOfYear, getCurrentYear } from '#libs/index'
 import DailyStoicService from '#services/daily_stoic_service'
 import FirebaseAdminService from '#services/firebase_admin_service'
 import { inject } from '@adonisjs/core'
@@ -10,24 +11,31 @@ export default class DailyStoicController {
     protected firebaseAdminService: FirebaseAdminService
   ) {}
 
-  async renderDailyStoicPage({ view }: HttpContext) {
-    const { data } = await this.dailyStoicService.getDailyStoic()
-    return view.render('pages/home', {
+  async renderDailyStoicPage({ inertia, request }: HttpContext) {
+    const qs = request.qs()
+
+    const { day = getCurrentDayOfYear(), year = getCurrentYear() } = qs
+
+    const { data, error } = await this.dailyStoicService.getDailyStoic(Number(year), Number(day))
+
+    if (error !== null) {
+      return inertia.render('errors/server_error', {
+        errors: {
+          message: 'Ooops!',
+        },
+      })
+    }
+
+    return inertia.render('home/index', {
       data,
+      day,
+      year,
     })
   }
 
-  async renderAboutUsPage({ view }: HttpContext) {
-    return view.render('pages/about_us')
-  }
-
-  async renderContactUsPage({ view }: HttpContext) {
-    return view.render('pages/contact_us')
-  }
-
   async getDailyStoic({ request, response }: HttpContext) {
-    const today = request.params() as { day: string; year: string } | undefined
-    const { data, error } = await this.dailyStoicService.getDailyStoic(Number(today?.day))
+    const today = request.params() as { day: number; year: number }
+    const { data, error } = await this.dailyStoicService.getDailyStoic(today.year, today.day)
 
     if (error !== null) {
       return response.status(500).json({

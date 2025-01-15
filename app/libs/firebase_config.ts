@@ -15,8 +15,6 @@ const serviceAccount = {
   universe_domain: env.get('FIREBASE_UNIVERSE_DOMAIN'),
 } as ServiceAccount
 
-console.log({ serviceAccount }, 'serviceAcc')
-
 export const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: env.get('FIREBASE_STORAGE_BUCKET'),

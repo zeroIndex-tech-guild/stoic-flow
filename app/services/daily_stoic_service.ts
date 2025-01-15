@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core'
 import FirebaseAdminService from './firebase_admin_service.js'
-import { getDayOfYear } from '../libs/index.js'
+import { DailyStoicEntry } from '#shared/types/daily_stoic'
 
 @inject()
 export default class DailyStoicService {
@@ -8,10 +8,12 @@ export default class DailyStoicService {
 
   constructor(protected firebaseAdminService: FirebaseAdminService) {}
 
-  async getDailyStoic(day?: number) {
+  async getDailyStoic(year: number, day: number) {
+    year // haha just to use :p
+
     try {
       const firestore = this.firebaseAdminService.firestore!
-      const dayOfYear = Number(day) || getDayOfYear()
+      const dayOfYear = day
 
       const collectionRef = firestore.collection(this.COLLECTION_NAME)
 
@@ -24,7 +26,7 @@ export default class DailyStoicService {
       }))
 
       if (dailyStoic.length > 0) {
-        const data = dailyStoic[0]
+        const data = dailyStoic[0] as DailyStoicEntry
         return {
           data,
           error: null,
