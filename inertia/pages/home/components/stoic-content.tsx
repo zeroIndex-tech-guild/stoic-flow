@@ -4,6 +4,7 @@ import { DailyStoicEntry } from '#shared/types/daily_stoic'
 
 type Props = {
   data: DailyStoicEntry
+  year: number
 }
 
 export const StoicContent = (props: Props) => {
@@ -40,10 +41,16 @@ export const StoicContent = (props: Props) => {
 
       {/* Navigation to Previous Days */}
       <div className="flex justify-between items-center mt-8">
-        <Link href={`/day/${data.day - 1}`} className="text-blue-600 hover:underline">
+        <Link
+          href={`?year=${props.year}&day=${data.day - 1}`}
+          className="text-blue-600 hover:underline"
+        >
           Previous Day
         </Link>
-        <Link href={`/day/${data.day + 1}`} className="text-blue-600 hover:underline">
+        <Link
+          href={`?year=${props.year}&day=${data.day + 1}`}
+          className="text-blue-600 hover:underline"
+        >
           Next Day
         </Link>
       </div>

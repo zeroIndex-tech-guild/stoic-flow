@@ -9,7 +9,7 @@ type Props = InferPageProps<DailyStoicController, 'renderDailyStoicPage'>
 export default function Home(props: Props) {
   return (
     <div className="container mx-auto grid grid-cols-12 gap-4 md:gap-8">
-      <StoicContent data={props.data} />
+      <StoicContent data={props.data} year={props.year} />
       <CommentSection />
     </div>
   )
